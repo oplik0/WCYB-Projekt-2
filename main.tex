@@ -1,0 +1,92 @@
+\documentclass{report}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage[titletoc,title]{appendix}
+
+% Odkomentuj by zmienić tytuł abstraktu
+% \renewcommand{\abstractname}{Podsumowanie}
+
+% Wcięcie pierwszego paragrafu po rozpoczęciu sekcji, inaczej wygląda dziwnie tbh
+\usepackage{indentfirst}
+
+% Matematyka
+% https://www.overleaf.com/learn/latex/Mathematical_expressions
+% https://en.wikibooks.org/wiki/LaTeX/Mathematics
+\usepackage{amsmath,amsfonts,amssymb,mathtools,amsthm,empheq,mathabx}
+
+\usepackage{polski}
+\numberwithin{equation}{section}
+
+\usepackage[figurename=Fig.]{caption}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[ocgcolorlinks]{hyperref}
+\hypersetup{
+    ocgcolorlinks=true,
+    linkcolor=blue!50!red,
+    urlcolor=blue!70!black
+}
+
+% Obrazki i wykresy
+% https://www.overleaf.com/learn/latex/Inserting_Images
+% https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions
+\usepackage{tikz}
+\usepackage{graphicx,float,pgfplots,float}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{decorations.markings}
+\graphicspath{ {./images/} }
+% Algorytmy
+% https://www.overleaf.com/learn/latex/algorithms
+% https://en.wikibooks.org/wiki/LaTeX/Algorithms
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{algorithmic}
+
+% Wyświetlanie SVG, wymaga Inkscape'a
+% \usepackage{svg}
+% Syntax highlighting
+% https://www.overleaf.com/learn/latex/Code_Highlighting_with_minted
+\usepackage{minted}
+\usemintedstyle{borland}
+\renewcommand{\chaptername}{Zadanie}
+\def\chapterautorefname{Zadanie}
+
+\title{WCYB Projekt 2}
+\author{Jakub Bliźniuk}
+\date{December 2022}
+
+
+\begin{document}
+\pagestyle{fancy}
+\fancyfoot{}
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{324904}
+
+\begin{titlepage}
+    \vfill
+    \maketitle
+    \thispagestyle{fancy}
+\end{titlepage}
+\tableofcontents
+\thispagestyle{fancy}
+\setcounter{chapter}{4}
+\chapter{Serwer zdalny VPN}
+\section{Wybrana technologia VPN}
+Jako preferowaną technologię wybrałem Tailscale, z self-hostowanym serwerem kontrolnym - Headscale. Jest to w zasadzie technologia \textit{overlay networking}, pozwalająca na dynamiczne tworzenie połączeń między urządzeniami w sieci z użyciem Wireguard.
+
+Konfiguracja była więc podzielona na trzy części:
+\begin{enumerate}
+    \item Konfiguracja serwera kontrolnego, który zarządza siecią, autoryzuje połączenia i uwierzytelnia węzły
+    \item Konfiguracja węzła wychodzącego, w tym wypadku na tym samym urządzniu co serwer kontrolny
+    \item Zalogowanie się do sieci w aplikacji Tailscale na urządzeniach końcowych
+\end{enumerate}
+
+Dodatkowo sieć została wykorzystana w kolejnym realizowanym zadaniu (\autoref{chap:pihole}), co wymagało tylko jednej zmiany w konfiguracji urządzeń wykorzystanych w tym zadaniu.
+
+\section{Przygotowanie urządzeń}
+
+
+\chapter{PiHole}
+\label{chap:pihole}
+\end{document}
