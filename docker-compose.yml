@@ -1,0 +1,54 @@
+version: "3"
+
+services:
+  # based on https://github.com/pi-hole/docker-pi-hole/blob/master/examples/docker-compose.yml.example
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    environment:
+      TZ: 'Europe/Warsaw'
+      # WEBPASSWORD: 'set a secure password here or it will be random'
+      WEBPASSWORD_FILE: '/run/secrets/webpassword' # use a docker secret instead of a static string
+      DNSSEC: true
+      PIHOLE_DNS_: '1.1.1.1;1.0.0.1;2606:4700:4700::1111;2606:4700:4700::1001'
+      WEBTHEME: 'default-auto'
+    # Volumes store your data between container upgrades
+    volumes:
+      - './etc-pihole:/etc/pihole'
+      - './etc-dnsmasq.d:/etc/dnsmasq.d'
+    restart: unless-stopped
+    network_mode: service:tailscale
+    secrets:
+      - webpassword
+    logging: # limit log size
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+  # adaptation of example command from tailscale docker documentation, also inspired by a few examples online of using it in docker-compose
+  tailscale:
+    hostname: pihole # this will end up being the name of the tailscale machine
+    image: tailscale/tailscale:latest
+    volumes:
+      - './tailscale:/var/lib' # state files, not necessary but why not
+      - '/dev/net/tun:/dev/net/tun' # passing this interface is required
+    cap_add:
+      # these capabilities are not default, but are required for tailscale to run
+      - NET_ADMIN
+      - NET_RAW
+      # I'm not sure if this is required, but a few docker-compose files with tailscale I've seen did ad dthis
+      - SYS_MODULE
+    restart: unless-stopped
+    command: tailscaled # run the tailscale daemon
+    environment:
+      TS_AUTH_KEY: ${TS_AUTH_KEY} # use the auth key from the environment docker compose is run in - in this case .env
+      TS_EXTRA_ARGS: '--login-server=https://wcyb.blizni.uk' # use a custom login server instead of the tailscale SaaS one
+    logging: # limit log size
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+secrets:
+  # use a file from this directory to load the pi-hole admin interface password as a docker secret
+  webpassword:
+    file: ./webpassword
